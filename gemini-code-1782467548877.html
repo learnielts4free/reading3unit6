@@ -1,0 +1,1675 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ms Lê Hằng English - Luyện Tập Tiếng Anh Tương Tác</title>
+    <!-- Google Fonts Nunito cho giao diện tròn trịa đáng yêu -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #8854C0;
+            --secondary: #00C9A7;
+            --accent: #FDCB6E;
+            --correct: #00D26A;
+            --wrong: #FF4757;
+            --dark: #2C3E50;
+            --card-shadow: 0 8px 0px rgba(0,0,0,0.1);
+            --btn-shadow: 0 5px 0px rgba(0,0,0,0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        /* Nền dải màu chuyển động Gradient + họa tiết SVG lơ lửng */
+        body {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background: linear-gradient(-45deg, #EE7752, #E73C7E, #23A6D5, #23D5AB);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            position: relative;
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0.15;
+            z-index: 1;
+            pointer-events: none;
+            /* SVG họa tiết ngôi sao và cầu vồng lơ lửng */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='%23FFFFFF' fill-opacity='0.6'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43 25c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm53-3c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 26c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm1 39c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4z'/%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Top Control Bar */
+        .top-bar {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            z-index: 10;
+        }
+
+        .teacher-info h2 {
+            font-size: 16px;
+            color: var(--primary);
+            font-weight: 800;
+        }
+        .teacher-info h3 {
+            font-size: 12px;
+            color: #7f8c8d;
+        }
+
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .ex-select {
+            padding: 8px 12px;
+            border-radius: 12px;
+            border: 2px solid var(--primary);
+            font-weight: 700;
+            color: var(--dark);
+            outline: none;
+            cursor: pointer;
+        }
+
+        .timer-btn {
+            background: var(--accent);
+            border: none;
+            padding: 8px 15px;
+            border-radius: 15px;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: var(--btn-shadow);
+            transition: all 0.2s;
+        }
+        .timer-btn:active {
+            transform: translateY(3px);
+            box-shadow: none;
+        }
+
+        /* Workspace Split-Screen */
+        .workspace {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+            z-index: 2;
+            padding: 15px;
+            gap: 15px;
+        }
+
+        .panel {
+            flex: 1;
+            overflow-y: auto;
+            background: rgba(255, 255, 255, 0.92);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.02);
+        }
+
+        /* Left Panel Style */
+        .left-panel {
+            border-right: 4px solid rgba(0,0,0,0.05);
+        }
+
+        .reading-block {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            box-shadow: var(--card-shadow);
+            border: 2px solid #E2E8F0;
+        }
+
+        .block-title {
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 12px;
+            font-size: 17px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .passage-text {
+            font-size: 16px;
+            line-height: 1.8;
+            color: var(--dark);
+            text-align: justify;
+        }
+
+        /* Nút dịch đoạn văn */
+        .translate-btn {
+            background: #EBF8FF;
+            color: #2B6CB0;
+            border: 1px dashed #63B3ED;
+            padding: 6px 12px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 700;
+            margin-top: 10px;
+            cursor: pointer;
+            display: inline-block;
+            transition: all 0.2s;
+        }
+        .translate-btn:hover { background: #BEE3F8; }
+
+        .translation-box {
+            display: none;
+            margin-top: 10px;
+            padding: 12px;
+            background: #F7FAFC;
+            border-radius: 10px;
+            font-size: 14.5px;
+            color: #4A5568;
+            border-left: 3px solid #63B3ED;
+            line-height: 1.6;
+        }
+
+        /* Glossary Table */
+        .glossary-box {
+            margin-top: 20px;
+            border-top: 2px dashed #CBD5E0;
+            padding-top: 15px;
+        }
+        .glossary-title {
+            font-weight: 800;
+            color: #C05621;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        .glossary-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        .glossary-table th, .glossary-table td {
+            border: 1px solid #E2E8F0;
+            padding: 6px 8px;
+            text-align: left;
+        }
+        .glossary-table th { background: #FEEBC8; color: #C05621; }
+
+        /* Right Panel Style - Exercises */
+        .question-card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: var(--card-shadow);
+            border: 2px solid #E2E8F0;
+            position: relative;
+        }
+
+        .q-number {
+            font-weight: 800;
+            color: var(--primary);
+            font-size: 15px;
+            margin-bottom: 8px;
+        }
+
+        .q-text {
+            font-weight: 700;
+            font-size: 15.5px;
+            color: var(--dark);
+            margin-bottom: 15px;
+        }
+
+        /* MCQ Options Grid */
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        @media (max-width: 768px) {
+            .options-grid { grid-template-columns: 1fr; }
+        }
+
+        .opt-btn {
+            background: #F8FAFC;
+            border: 2px solid #E2E8F0;
+            padding: 12px 15px;
+            border-radius: 15px;
+            text-align: left;
+            font-size: 14.5px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 0px #E2E8F0;
+            transition: all 0.15s;
+        }
+        .opt-btn:hover:not(.disabled) {
+            transform: scale(1.02);
+            background: #EDF2F7;
+        }
+        .opt-btn:active:not(.disabled) {
+            transform: translateY(2px);
+            box-shadow: none;
+        }
+
+        /* Correct / Incorrect State */
+        .opt-btn.correct {
+            background: var(--correct) !important;
+            color: white !important;
+            border-color: #00B359 !important;
+            box-shadow: 0 4px 0px #00B359 !important;
+        }
+        .opt-btn.wrong {
+            background: var(--wrong) !important;
+            color: white !important;
+            border-color: #E03E4D !important;
+            box-shadow: 0 4px 0px #E03E4D !important;
+        }
+
+        /* Dạng toán click vào dấu chấm lửng tự động điền câu trả lời mẫu */
+        .clickable-blank {
+            color: #3182CE;
+            font-weight: 800;
+            cursor: pointer;
+            border-bottom: 2px dashed #3182CE;
+            padding: 0 4px;
+        }
+
+        /* Free Text Input Style */
+        .text-input-box {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #CBD5E0;
+            border-radius: 12px;
+            outline: none;
+            font-size: 15px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .text-input-box:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 5px rgba(136,84,192,0.3);
+        }
+
+        /* Explanation Box */
+        .explanation-box {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            background: #F7FAFC;
+            border-radius: 12px;
+            border-left: 4px solid var(--primary);
+            font-size: 14px;
+            line-height: 1.6;
+            color: #2D3748;
+        }
+
+        /* Shake Animation */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-6px); }
+            40%, 80% { transform: translateX(6px); }
+        }
+        .shake-card {
+            animation: shake 0.4s ease-in-out;
+        }
+
+        /* Confetti Pháo Giấy Canvas */
+        #confetti-canvas {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        /* Footer bar */
+        footer {
+            background: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.05);
+            z-index: 10;
+        }
+
+        .submit-btn {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 20px;
+            font-weight: 800;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 5px 0 #00A88B;
+            transition: all 0.2s;
+        }
+        .submit-btn:active {
+            transform: translateY(3px);
+            box-shadow: none;
+        }
+
+        /* Modal Tổng kết kết quả hoành tráng */
+        .result-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: white;
+            border-radius: 25px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            animation: scaleUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        @keyframes scaleUp {
+            from { transform: scale(0.7); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .score-big {
+            font-size: 64px;
+            font-weight: 800;
+            color: var(--primary);
+            margin: 20px 0;
+        }
+        .rank-comment {
+            font-size: 18px;
+            font-weight: 700;
+            color: #2C3E50;
+            margin-bottom: 25px;
+        }
+        .close-modal-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 15px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .exercise-wrapper {
+            display: none;
+        }
+        .exercise-wrapper.active-view {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="confetti-canvas"></canvas>
+
+    <!-- Top Navigation Bar Control Unit -->
+    <div class="top-bar">
+        <div class="teacher-info">
+            <h2>✨ Luyện Thi Tiếng Anh Tương Tác</h2>
+            <h3>Giáo viên tạo: Ms Lê Hằng English 🌟</h3>
+        </div>
+        <div class="nav-controls">
+            <select class="ex-select" id="exerciseSelector" onchange="changeExerciseGroup(this.value)">
+                <option value="group16">Exercise 16: Ads & Announcements</option>
+                <option value="group17">Exercise 17: Cloze Passages</option>
+                <option value="group18">Exercise 18: Reading Comprehension</option>
+                <option value="group19">Exercise 19: Answer Questions</option>
+                <option value="group20">Exercise 20: Missing Sentences</option>
+            </select>
+            <button class="timer-btn" id="timerButton" onclick="toggleTimer()">⏱️ BẮT ĐẦU TÍNH GIỜ LÀM BÀI (10:00)</button>
+        </div>
+    </div>
+
+    <!-- Main Workspace Area -->
+    <div class="workspace">
+        
+        <!-- ================= PANELS BÊN TRÁI: READING PASSAGES ================= -->
+        <div class="panel left-panel">
+            
+            <!-- GROUP EXERCISE 16 -->
+            <div id="left-group16" class="exercise-wrapper active-view">
+                <!-- Paragraph 1 -->
+                <div class="reading-block">
+                    <div class="block-title">❶ Announcement: Friends Personality Quiz! 🌟</div>
+                    <div class="passage-text">
+                        Do you want (1)_____ what kind of friend you are? Come and try our Friends Personality Quiz! It’s fun, easy, and only (2)_____ a few minutes. You will answer simple questions about your likes, hobbies, and how you help your friends. (3)_____ the end, you will learn more about (4)_____ friendship style - are you a kind helper, a fun buddy, or a good listener?<br>
+                        ∞ Date: This Friday<br>
+                        ⎣ Place: Room 3A<br>
+                        🕒 Time: 10:30 a.m.<br>
+                        Bring a smile and enjoy with your friends!
+                    </div>
+                    <button class="translate-btn" onclick="toggleTranslation(this)">Mở dịch đoạn này 🌟</button>
+                    <div class="translation-box">
+                        Bạn có muốn biết mình là kiểu người bạn nào không? Hãy đến và thử Bài trắc nghiệm Tính cách Bạn bè của chúng tôi! Nó rất vui, dễ dàng và chỉ mất vài phút. Bạn sẽ trả lời những câu hỏi đơn giản về sở thích cá nhân, thói quen và cách bạn giúp đỡ bạn bè của mình. Cuối cùng, bạn sẽ hiểu thêm về phong cách tình bạn của chính mình - bạn là một người trợ giúp tử tế, một người bạn vui vẻ hay một người biết lắng nghe?<br>
+                        Ngày: Thứ Sáu tuần này<br>
+                        Địa điểm: Phòng 3A<br>
+                        Thời gian: 10:30 sáng<br>
+                        Hãy mang theo nụ cười và tận hưởng niềm vui cùng bạn bè!
+                    </div>
+                    
+                    <!-- Glossary tự động trích xuất -->
+                    <div class="glossary-box">
+                        <div class="glossary-title">💡 Bảng Từ Vựng Thông Minh (Glossary):</div>
+                        <table class="glossary-table">
+                            <tr><th>Từ vựng</th><th>Loại từ</th><th>Nghĩa tiếng Việt</th></tr>
+                            <tr><td>Personality</td><td>(n)</td><td>Tính cách, nhân cách</td></tr>
+                            <tr><td>Quiz</td><td>(n)</td><td>Cuộc thi đố, bài trắc nghiệm ngắn</td></tr>
+                            <tr><td>Buddy</td><td>(n)</td><td>Bạn thân, cạ cứng</td></tr>
+                            <tr><td>Friendship style</td><td>(n)</td><td>Phong cách tình bạn</td></tr>
+                            <tr><td>Listener</td><td>(n)</td><td>Người biết lắng nghe</td></tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Paragraph 2 -->
+                <div class="reading-block">
+                    <div class="block-title">❷ Notice: My Friends 📝</div>
+                    <div class="passage-text">
+                        I have many good friends (1)____ school. They are kind, funny, and (2)_____. We play games and study together every day. My best friend is Nam. He is friendly and always (3)______ me with homework. On weekends, we go to the park or play football. I feel happy when I am with my friends. We laugh, talk, and have a great time. Friends are important because they make life fun and special. Let’s always be good friends and (4)_____ care of one another!<br>
+                        ☞ Do you have good friends too?
+                    </div>
+                    <button class="translate-btn" onclick="toggleTranslation(this)">Mở dịch đoạn này 🌟</button>
+                    <div class="translation-box">
+                        Tôi có nhiều người bạn tốt ở trường. Họ đều tốt bụng, vui hóm hỉnh và hay giúp đỡ người khác. Chúng tôi chơi trò chơi và học tập cùng nhau mỗi ngày. Bạn thân nhất của tôi là Nam. Cậu ấy rất thân thiện và luôn giúp đỡ tôi làm bài tập về nhà. Vào cuối tuần, chúng tôi đến công viên hoặc chơi bóng đá. Tôi cảm thấy hạnh phúc khi ở bên bạn bè của mình. Chúng tôi cười đùa, trò chuyện và có một khoảng thời gian tuyệt vời. Bạn bè rất quan trọng vì họ làm cho cuộc sống trở nên vui vẻ và đặc biệt. Chúng ta hãy luôn là những người bạn tốt và chăm sóc lẫn nhau nhé!<br>
+                        Bạn cũng có những người bạn tốt chứ?
+                    </div>
+                    <div class="glossary-box">
+                        <table class="glossary-table">
+                            <tr><th>Từ vựng</th><th>Loại từ</th><th>Nghĩa tiếng Việt</th></tr>
+                            <tr><td>Helpful</td><td>(adj)</td><td>Hay giúp đỡ, có ích</td></tr>
+                            <tr><td>Important</td><td>(adj)</td><td>Quan trọng</td></tr>
+                            <tr><td>Special</td><td>(adj)</td><td>Đặc biệt</td></tr>
+                            <tr><td>Each other / One another</td><td>(pron)</td><td>Lẫn nhau, với nhau</td></tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Paragraph 3 -->
+                <div class="reading-block">
+                    <div class="block-title">❸ Advertisement: My Friends – A Gift in Life! 🎁</div>
+                    <div class="passage-text">
+                        Do you have (1)______ friends? I do! My friends are always there for me. We play, laugh, and study together. They help me when I’m sad and cheer me (2)_____. My best friend is Linh. She is kind and always smiles. On Sundays, we (3)_____ bikes and eat ice cream. Having friends makes life fun and happy. Good friends share, listen, and care.<br>
+                        ) Let’s (4)______ friendship every day!<br>
+                        Be a good friend – it starts with you!<br>
+                        Ζ Friends make everything better!
+                    </div>
+                    <button class="translate-btn" onclick="toggleTranslation(this)">Mở dịch đoạn này 🌟</button>
+                    <div class="translation-box">
+                        Bạn có những người bạn tuyệt vời không? Tôi thì có đấy! Bạn bè luôn ở bên cạnh tôi. Chúng tôi vui chơi, cười đùa và học tập cùng nhau. Họ giúp đỡ tôi khi tôi buồn và cổ vũ tôi vui lên. Bạn thân nhất của tôi là Linh. Bạn ấy tốt bụng và luôn mỉm cười. Vào các ngày Chủ nhật, chúng tôi đạp xe và ăn kem. Có bạn bè làm cho cuộc sống trở nên vui vẻ và hạnh phúc. Những người bạn tốt luôn chia sẻ, lắng nghe và quan tâm đến nhau. Hãy tôn vinh/kỷ niệm tình bạn mỗi ngày! Hãy là một người bạn tốt - điều đó bắt đầu từ chính bạn! Bạn bè làm cho mọi thứ tốt đẹp hơn!
+                    </div>
+                    <div class="glossary-box">
+                        <table class="glossary-table">
+                            <tr><th>Từ vựng</th><th>Loại từ</th><th>Nghĩa tiếng Việt</th></tr>
+                            <tr><td>Amazing</td><td>(adj)</td><td>Tuyệt vời, kinh ngạc</td></tr>
+                            <tr><td>Cheer up</td><td>(v)</td><td>Cổ vũ, làm cho vui lên</td></tr>
+                            <tr><td>Celebrate</td><td>(v)</td><td>Tôn vinh, ăn mừng, kỷ niệm</td></tr>
+                            <tr><td>Share</td><td>(v)</td><td>Chia sẻ</td></tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GROUP EXERCISE 17 -->
+            <div id="left-group17" class="exercise-wrapper">
+                <div class="reading-block">
+                    <div class="block-title">❶ Susan's Life Stories 👩</div>
+                    <div class="passage-text">
+                        Susan is my best friends. She is tall and has a long black (1)______. She lives in an apartment. Her apartment has a pool but she rarely (2)_______ to the swimming pool. Her favorite subject (3)_______ IT, she really likes using computers, she always goes to the IT club every 5.30 p.m. on Friday. She is very (4)_______. She always helps people when they need. Susan and I have the festival (5)_______ school next week. It starts at 10 a.m. and ends at 9 p.m. We (6)_______ and can't wait to go to the festival.
+                    </div>
+                    <button class="translate-btn" onclick="toggleTranslation(this)">Mở dịch đoạn này 🌟</button>
+                    <div class="translation-box">
+                        Susan là bạn thân nhất của tôi. Cô ấy cao và có một mái tóc đen dài. Cô ấy sống trong một căn hộ. Căn hộ của cô ấy có một hồ bơi nhưng cô ấy hiếm khi đi đến hồ bơi đó. Môn học yêu thích của cô ấy là Công nghệ thông tin (IT), cô ấy thực sự thích sử dụng máy tính, cô ấy luôn đến câu lạc bộ IT vào mỗi 5h30 chiều thứ Sáu. Cô ấy rất chu đáo/hay giúp đỡ. Cô ấy luôn giúp đỡ mọi người khi họ cần. Susan và tôi có một lễ hội ở trường vào tuần tới. Nó bắt đầu lúc 10 giờ sáng và kết thúc lúc 9 giờ tối. Chúng tôi rất hào hứng và không thể chờ đợi thêm để được tham gia lễ hội đó.
+                    </div>
+                    <div class="glossary-box">
+                        <table class="glossary-table">
+                            <tr><th>Từ vựng</th><th>Loại từ</th><th>Nghĩa tiếng Việt</th></tr>
+                            <tr><td>Apartment</td><td>(n)</td><td>Căn hộ chung cư</td></tr>
+                            <tr><td>Rarely</td><td>(adv)</td><td>Hiếm khi, ít khi</td></tr>
+                            <tr><td>Festival</td><td>(n)</td><td>Lễ hội</td></tr>
+                            <tr><td>Excited</td><td>(adj)</td><td>Hào hứng, phấn khích</td></tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="reading-block">
+                    <div class="block-title">❷ Tony's Daily Routine 👨‍🏫</div>
+                    <div class="passage-text">
+                        Tony is my best friend. He is a physics teacher. He's (1)_____ art school in Scotland. Every morning he gets up at 6 o'clock, (2)______ breakfast and a glass of milk. Then he leaves for work. The school is far from his home, so he can't (3)_______ there. He must go by bus. He has lunch at a (4)______ nearby. In the afternoon he works until 5 o’clock and then he goes home. He doesn't work (5)______ Sundays. He goes to the cinema or museum. He is married and he (6)_______ a son. He loves his family. They are very happy.
+                    </div>
+                    <button class="translate-btn" onclick="toggleTranslation(this)">Mở dịch đoạn này 🌟</button>
+                    <div class="translation-box">
+                        Tony là bạn thân nhất của tôi. Cậu ấy là một giáo viên dạy Vật lý. Cậu ấy đang giảng dạy tại một trường nghệ thuật ở Scotland. Mỗi buổi sáng cậu ấy thức dậy lúc 6 giờ, ăn sáng và uống một ly sữa. Sau đó cậu ấy đi làm. Ngôi trường nằm cách xa nhà cậu ấy, vì thế cậu ấy không thể đi bộ đến đó. Cậu ấy phải di chuyển bằng xe buýt. Cậu ấy ăn trưa tại một nhà hàng gần đó. Vào buổi chiều cậu ấy làm việc đến 5 giờ rồi trở về nhà. Cậu ấy không làm việc vào các ngày Chủ nhật. Cậu ấy đi xem phim hoặc tham quan bảo tàng. Cậu ấy đã kết hôn và có một cậu con trai. Cậu ấy yêu thương gia đình mình rất nhiều. Họ sống rất hạnh phúc.
+                    </div>
+                    <div class="glossary-box">
+                        <table class="glossary-table">
+                            <tr><th>Từ vựng</th><th>Loại từ</th><th>Nghĩa tiếng Việt</th></tr>
+                            <tr><td>Physics</td><td>(n)</td><td>Môn Vật lý</td></tr>
+                            <tr><td>Nearby</td><td>(adv/adj)</td><td>Gần đây, bên cạnh</td></tr>
+                            <tr><td>Museum</td><td>(n)</td><td>Bảo tàng</td></tr>
+                            <tr><td>Married</td><td>(adj)</td><td>Đã kết hôn</td></tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GROUP EXERCISE 18 -->
+            <div id="left-group18" class="exercise-wrapper">
+                <div class="reading-block">
+                    <div class="block-title">❶ Letter to Grandma ✉️</div>
+                    <div class="passage-text" id="raw-text-18-1">
+                        Dear Grandma,<br><br>
+                        I’m writing to you from the summer camp in Brisbane, I’m here with all of my friends from school. The camp is very nice and the weather is fine, too. We can take part in many activities such as going fishing, sailing, playing volleyball on the beach, visiting a museum in the city centre or having parties at the camp.<br><br>
+                        I’m sharing a room with two friends: Hana and Mi. Hana has short curly dark hair and big round eyes. She is very kind and friendly. She’s willing to help others in the camp.<br><br>
+                        We’re having a great time here! Can you send my regards to Grandpa?<br>
+                        Write to me soon.<br><br>
+                        With love,<br>
+                        Tina
+                    </div>
+                    <button class="translate-btn" onclick="toggleTranslation(this)">Mở dịch đoạn này 🌟</button>
+                    <div class="translation-box">
+                        Bà kính yêu,<br>
+                        Con đang viết thư cho bà từ trại hè ở Brisbane đây ạ, con đang ở đây cùng tất cả các bạn học cùng trường. Trại hè đẹp lắm và thời tiết cũng rất tuyệt vời nữa bà ạ. Chúng con có thể tham gia vào rất nhiều hoạt động như đi câu cá, chèo thuyền, chơi bóng chuyền bãi biển, tham quan bảo tàng ở trung tâm thành phố hoặc tham gia các buổi tiệc tại trại hè.<br>
+                        Con đang ở chung phòng với hai người bạn: Hana và Mi. Hana có mái tóc đen xoăn ngắn và đôi mắt tròn to. Bạn ấy rất tốt bụng và thân thiện. Bạn ấy luôn sẵn lòng giúp đỡ những người khác tại trại hè.<br>
+                        Chúng con đang có một khoảng thời gian tuyệt vời ở đây! Bà gửi lời hỏi thăm của con tới Ông nhé ạ?<br>
+                        Viết thư cho con sớm nha bà.<br>
+                        Yêu bà nhiều,<br>
+                        Tina
+                    </div>
+                </div>
+
+                <div class="reading-block">
+                    <div class="block-title">❷ Julie and Janet 👭</div>
+                    <div class="passage-text" id="raw-text-18-2">
+                        I’m Julie and my best friend is Janet. We’re 12 years old and we’re in the same class. Both of us are tall and slim. I’m a bit quiet and shy, and Janet is kind and friendly. We like to spend our free time together. At break time, we sometimes play skipping or we just sit and chat. We live in the same building, so we always walk home together and talk about our homework. Janet is very helpful to me. When I’m doing my homework and I don’t understand a question, I often call her for help. At weekends, Janet usually wants to go skating in the park or go to the cinema, but I like staying at home and reading comic books. However, we often plan our day together.
+                    </div>
+                    <button class="translate-btn" onclick="toggleTranslation(this)">Mở dịch đoạn này 🌟</button>
+                    <div class="translation-box">
+                        Tôi là Julie và bạn thân nhất của tôi là Janet. Chúng tôi 12 tuổi và học chung một lớp. Cả hai đứa tôi đều cao và mảnh khảnh. Tôi thì hơi ít nói và nhút nhát một chút, còn Janet lại tốt bụng và rất thân thiện. Chúng tôi thích dành thời gian rảnh rỗi cùng nhau. Vào giờ ra chơi, thỉnh thoảng chúng tôi chơi nhảy dây hoặc chỉ ngồi tán gẫu. Chúng tôi sống chung một tòa nhà, nên lúc nào cũng đi bộ về nhà cùng nhau và bàn luận về bài tập về nhà. Janet giúp đỡ tôi rất nhiều. Khi tôi làm bài tập mà không hiểu câu hỏi, tôi thường gọi điện nhờ bạn ấy giúp đỡ. Vào cuối tuần, Janet thường muốn đi trượt pa-tin ở công viên hoặc đi xem phim, nhưng tôi lại thích ở nhà đọc truyện tranh hơn. Tuy nhiên, chúng tôi luôn cùng nhau lên kế hoạch cho một ngày.
+                    </div>
+                </div>
+
+                <div class="reading-block">
+                    <div class="block-title">❸ Nga and Lan 🏍️</div>
+                    <div class="passage-text" id="raw-text-18-3">
+                        My name is Nga and my best friend is Lan. She is my classmate. We are both in grade 6 at Long Hoa Secondary School. Lan lives next to my house. Everyday, my father takes us to school on his motorbike, and we come home on foot in the evening. She is an intelligent girl. Her favourite subject is Math, and she is really good at it. Mine is English. We usually help each other with our homework. Whenever I am sad, Lan always tells me stories to make me happy. I feel really lucky to have a best friend like Lan.
+                    </div>
+                    <button class="translate-btn" onclick="toggleTranslation(this)">Mở dịch đoạn này 🌟</button>
+                    <div class="translation-box">
+                        Tên tôi là Nga và bạn thân nhất của tôi là Lan. Bạn ấy là bạn cùng lớp của tôi. Cả hai chúng tôi đều học lớp 6 trường THCS Long Hòa. Lan sống ngay cạnh nhà tôi. Hàng ngày, bố tôi chở cả hai đứa đến trường bằng xe máy, và chúng tôi đi bộ về nhà vào buổi tối. Bạn ấy là một cô gái thông minh. Môn học yêu thích của bạn ấy là Toán, và bạn ấy cực kỳ giỏi môn đó. Còn môn của tôi là tiếng Anh. Chúng tôi thường giúp nhau làm bài tập về nhà. Bất cứ khi nào tôi buồn, Lan luôn kể chuyện cho tôi nghe để làm tôi vui lên. Tôi cảm thấy thực sự may mắn khi có một người bạn thân như Lan.
+                    </div>
+                </div>
+            </div>
+
+            <!-- GROUP EXERCISE 19 -->
+            <div id="left-group19" class="exercise-wrapper">
+                <div class="reading-block">
+                    <div class="block-title">❶ Dynamic Profile: Mike (Mark) 🏆</div>
+                    <div class="passage-text" id="raw-text-19">
+                        Mike is my best friend. He is tall and sporty because he plays sports every day. He has short dark hair and big eyes. There is always a bright smile on his face. At school, he studies very hard. Maths is his favourite subject. He is an active person when he joins most sport competitions in the school as well as in the city. He also plays volleyball very well. At home, Mark is a good son because he obeys his parents and spends time helping them with the housework.
+                    </div>
+                    <button class="translate-btn" onclick="toggleTranslation(this)">Mở dịch đoạn này 🌟</button>
+                    <div class="translation-box">
+                        Mike là bạn tốt nhất của tôi. Cậu ấy cao ráo và có dáng vóc thể thao bởi vì cậu ấy chơi thể thao mỗi ngày. Cậu ấy có mái tóc tối màu ngắn và đôi mắt to. Luôn luôn có một nụ cười rạng rỡ nở trên khuôn mặt cậu ấy. Ở trường, cậu ấy học tập rất chăm chỉ. Toán là môn học yêu thích của cậu ấy. Cậu ấy là một người năng động khi tham gia hầu hết các cuộc thi thể thao ở trường cũng như trong thành phố. Cậu ấy chơi bóng chuyền cũng rất giỏi. Ở nhà, Mark là một người con ngoan bởi vì cậu ấy vâng lời cha mẹ và dành thời gian giúp đỡ họ làm công việc nhà.
+                    </div>
+                </div>
+            </div>
+
+            <!-- GROUP EXERCISE 20 -->
+            <div id="left-group20" class="exercise-wrapper">
+                <div class="reading-block">
+                    <div class="block-title">❶ Hi! Nice to meet you! My name is Minh. 🎒</div>
+                    <div class="passage-text">
+                        Hi! Nice to meet you! My name is Minh. <strong>(1)<span class="clickable-blank" onclick="showBlankAns(this, 'I am 12 and a pupil at Dong Da Secondary School')">_B_</span></strong>. I like Maths, English and history. My teachers are very kind and caring. I have many friends <strong>(2)<span class="clickable-blank" onclick="showBlankAns(this, 'and they are friendly')">_D_</span></strong>. I love my school a lot. My family lives in Ha Noi. I have a younger brother. He is 7 years old. <strong>(3)<span class="clickable-blank" onclick="showBlankAns(this, 'He is very active and funny')">_C_</span></strong>. He has black hair and big brown eyes. At the weekend, <strong>(4)<span class="clickable-blank" onclick="showBlankAns(this, 'we often play football and computer games')">_A_</span></strong>. Sometimes, I visit my grandmother. She lives in the countryside. She is 63 years old with long white hair. She is really loving and caring. I often tell her about my friends.
+                    </div>
+                    <button class="translate-btn" onclick="toggleTranslation(this)">Mở dịch đoạn này 🌟</button>
+                    <div class="translation-box">
+                        Xin chào! Rất vui được gặp các bạn! Tên tôi là Minh. Tôi 12 tuổi và là học sinh trường THCS Đống Đa. Tôi thích môn Toán, tiếng Anh và Lịch sử. Giáo viên của tôi rất tử tế và chu đáo. Tôi có nhiều người bạn và họ rất thân thiện. Tôi yêu trường học của mình rất nhiều. Gia đình tôi sống ở Hà Nội. Tôi có một em trai. Em ấy 7 tuổi. Em ấy rất năng động và vui tính. Em ấy có mái tóc đen và đôi mắt to màu nâu. Vào cuối tuần, chúng tôi thường chơi bóng đá và trò chơi máy tính. Thỉnh thoảng, tôi về thăm bà nội. Bà sống ở nông thôn. Bà 63 tuổi, có mái tóc trắng dài. Bà thực sự rất yêu thương và chu đáo. Tôi thường kể cho bà nghe về bạn bè của mình.
+                    </div>
+                </div>
+
+                <div class="reading-block">
+                    <div class="block-title">❷ My best friend’s name is Nhi. 💖</div>
+                    <div class="passage-text">
+                        My best friend’s name is Nhi. We are studying in the same class. She is my good friend and always helps me. <strong>(1)<span class="clickable-blank" onclick="showBlankAns(this, 'She also understands me well')">_D_</span></strong> I like her very much. She lives near my house <strong>(2)<span class="clickable-blank" onclick="showBlankAns(this, 'and we often walk to school in the morning')">_B_</span></strong>. On Sundays she comes to my house. We both like eating ice – cream, drawing <strong>(3)<span class="clickable-blank" onclick="showBlankAns(this, 'and writing stories in our free time')">_C_</span></strong>. Nhi is an active girl and never feels sad. She often tells me her interesting jokes. She has a round face with long black hair. At the moment, <strong>(4)<span class="clickable-blank" onclick="showBlankAns(this, 'Nhi is at an English camp in Da Nang')">_A_</span></strong>. I miss her a lot.
+                    </div>
+                    <button class="translate-btn" onclick="toggleTranslation(this)">Mở dịch đoạn này 🌟</button>
+                    <div class="translation-box">
+                        Tên bạn thân nhất của tôi là Nhi. Chúng tôi đang học cùng một lớp. Bạn ấy là một người bạn tốt của tôi và luôn luôn giúp đỡ tôi. Bạn ấy cũng rất hiểu tôi. Tôi mến bạn ấy nhiều lắm. Bạn ấy sống gần nhà tôi và chúng tôi thường đi bộ đến trường cùng nhau vào buổi sáng. Vào các ngày Chủ nhật, bạn ấy đến nhà tôi chơi. Cả hai chúng tôi đều thích ăn kem, vẽ tranh và viết truyện khi có thời gian rảnh. Nhi là một cô gái năng động và không bao giờ biết buồn. Bạn ấy thường kể cho tôi nghe những câu chuyện đùa thú vị. Bạn ấy có khuôn mặt tròn với mái tóc đen dài. Hiện tại, Nhi đang ở hội trại tiếng Anh tại Đà Nẵng. Tôi nhớ bạn ấy nhiều lắm.
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ================= PANELS BÊN PHẢI: EXERCISES & QUESTIONS ================= -->
+        <div class="panel right-panel">
+            
+            <!-- QUESTIONS FOR GROUP 16 -->
+            <div id="right-group16" class="exercise-wrapper active-view">
+                <!-- EX 16.1.1 -->
+                <div class="question-card" data-correct="A">
+                    <div class="q-number">Question 1 (Ex 16 - Paragraph 1)</div>
+                    <div class="q-text">Do you want (1)_____ what kind of friend you are?</div>
+                    <div class="options-grid">
+                        <button class="opt-btn" onclick="selectOption(this, 'A')">A. to know</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'B')">B. to knowing</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'C')">C. knowing</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'D')">D. know</button>
+                    </div>
+                    <div class="explanation-box">
+                        <strong>Giải thích chi tiết của cô Lê Hằng:</strong><br>
+                        1. Cấu trúc ngữ pháp: Động từ "want" đi kèm với động từ nguyên mẫu có "to" (want + to-V) mang ý nghĩa "muốn làm điều gì đó".<br>
+                        2. Dịch nghĩa: "Bạn có muốn BIẾT mình là kiểu người bạn nào không?"<br>
+                        3. Kết luận: Chọn <strong>A. to know</strong>. Loại C và D vì sai cấu trúc. Loại B vì không dùng "to + V-ing" sau want trong ngữ cảnh này.
+                    </div>
+                </div>
+
+                <!-- EX 16.1.2 -->
+                <div class="question-card" data-correct="B">
+                    <div class="q-number">Question 2 (Ex 16 - Paragraph 1)</div>
+                    <div class="q-text">It’s fun, easy, and only (2)_____ a few minutes.</div>
+                    <div class="options-grid">
+                        <button class="opt-btn" onclick="selectOption(this, 'A')">A. gives</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'B')">B. takes</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'C')">C. builds</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'D')">D. sees</button>
+                    </div>
+                    <div class="explanation-box">
+                        <strong>Giải thích chi tiết:</strong><br>
+                        1. Phân tích cụm từ (Collocation): Cấu trúc diễn tả việc tốn bao nhiêu thời gian làm gì là: "It takes + thời gian". Do đó hành động tốn vài phút phải đi với động từ "take".<br>
+                        2. Dịch nghĩa: "Nó rất vui, dễ dàng và chỉ mất vài phút."<br>
+                        3. Chọn <strong>B. takes</strong>. Các từ còn lại: gieo (gives - cho), builds (xây dựng), sees (nhìn) hoàn toàn sai nghĩa cấu trúc thời gian.
+                    </div>
+                </div>
+
+                <!-- EX 16.1.3 -->
+                <div class="question-card" data-correct="B">
+                    <div class="q-number">Question 3 (Ex 16 - Paragraph 1)</div>
+                    <div class="q-text">(3)_____ the end, you will learn more about your friendship style.</div>
+                    <div class="options-grid">
+                        <button class="opt-btn" onclick="selectOption(this, 'A')">A. With</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'B')">B. At</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'C')">C. For</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'D')">D. To</button>
+                    </div>
+                    <div class="explanation-box">
+                        <strong>Giải thích chi tiết:</strong><br>
+                        1. Cụm từ cố định: "At the end" dùng để chỉ một thời điểm kết thúc một sự việc gì đó (Vào lúc cuối cùng).<br>
+                        2. Chọn <strong>B. At</strong>.
+                    </div>
+                </div>
+
+                <!-- EX 16.1.4 -->
+                <div class="question-card" data-correct="C">
+                    <div class="q-number">Question 4 (Ex 16 - Paragraph 1)</div>
+                    <div class="q-text">...you will learn more about (4)_____ friendship style</div>
+                    <div class="options-grid">
+                        <button class="opt-btn" onclick="selectOption(this, 'A')">A. her</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'B')">B. its</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'C')">C. your</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'D')">D. his</button>
+                    </div>
+                    <div class="explanation-box">
+                        <strong>Giải thích chi tiết:</strong><br>
+                        Bài viết đang trực tiếp nói chuyện và hỏi người đọc (Come and try *our* quiz). Do vậy, tính từ sở hữu phù hợp nhất phải là hướng tới người đọc: "your friendship style" (phong cách tình bạn của BẠN). Chọn <strong>C</strong>.
+                    </div>
+                </div>
+
+                <!-- NHÓM 16.2 -->
+                <div class="question-card" data-correct="A">
+                    <div class="q-number">Question 5 (Ex 16 - Paragraph 2)</div>
+                    <div class="q-text">I have many good friends (1)____ school.</div>
+                    <div class="options-grid">
+                        <button class="opt-btn" onclick="selectOption(this, 'A')">A. at</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'B')">B. on</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'C')">C. in</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'D')">D. to</button>
+                    </div>
+                    <div class="explanation-box">
+                        Cụm từ chỉ vị trí cố định thông dụng trong tiếng Anh: "at school" có nghĩa là ở trường học. Chọn <strong>A</strong>.
+                    </div>
+                </div>
+
+                <div class="question-card" data-correct="C">
+                    <div class="q-number">Question 6 (Ex 16 - Paragraph 2)</div>
+                    <div class="q-text">They are kind, funny, and (2)_____.</div>
+                    <div class="options-grid">
+                        <button class="opt-btn" onclick="selectOption(this, 'A')">A. straight</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'B')">B. wavy</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'C')">C. helpful</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'D')">D. boring</button>
+                    </div>
+                    <div class="explanation-box">
+                        Dựa vào logic ngữ cảnh, các từ đi trước là "kind" (tốt bụng), "funny" (vui vẻ) - đều là từ mang nghĩa tích cực mô tả tính cách bạn tốt. Ta chọn tính từ tích cực đồng bộ: <strong>C. helpful</strong> (hay giúp đỡ). Loại A, B (tóc thẳng/xoăn sóng) và D (nhàm chán).
+                    </div>
+                </div>
+
+                <div class="question-card" data-correct="C">
+                    <div class="q-number">Question 7 (Ex 16 - Paragraph 2)</div>
+                    <div class="q-text">He is friendly and always (3)______ me with homework.</div>
+                    <div class="options-grid">
+                        <button class="opt-btn" onclick="selectOption(this, 'A')">A. will help</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'B')">B. helped</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'C')">C. helps</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'D')">D. is helping</button>
+                    </div>
+                    <div class="explanation-box">
+                        Dấu hiệu có trạng từ chỉ tần suất "always" diễn tả thói quen lặp lại ở hiện tại đơn. Chủ ngữ "He" là ngôi thứ ba số ít, vì vậy động từ "help" phải thêm đuôi s/es thành <strong>helps</strong>. Chọn <strong>C</strong>.
+                    </div>
+                </div>
+
+                <div class="question-card" data-correct="A">
+                    <div class="q-number">Question 8 (Ex 16 - Paragraph 2)</div>
+                    <div class="q-text">Let’s always be good friends and (4)_____ care of one another!</div>
+                    <div class="options-grid">
+                        <button class="opt-btn" onclick="selectOption(this, 'A')">A. take</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'B')">B. look</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'C')">C. make</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'D')">D. stay</button>
+                    </div>
+                    <div class="explanation-box">
+                        Cấu trúc cụm động từ cực kỳ nổi tiếng: "take care of someone" nghĩa là quan tâm, chăm sóc ai đó. Chọn <strong>A. take</strong>.
+                    </div>
+                </div>
+
+                <!-- NHÓM 16.3 -->
+                <div class="question-card" data-correct="B">
+                    <div class="q-number">Question 9 (Ex 16 - Paragraph 3)</div>
+                    <div class="q-text">Do you have (1)______ friends?</div>
+                    <div class="options-grid">
+                        <button class="opt-btn" onclick="selectOption(this, 'A')">A. talkative</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'B')">B. amazing</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'C')">C. sensitive</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'D') text-decoration:line-through'">D. serious</button>
+                    </div>
+                    <div class="explanation-box">
+                        Vế sau ghi: "My friends are always there for me..." câu chuyện ca ngợi bạn bè nên tính từ phải mang nghĩa khen ngợi: <strong>B. amazing</strong> (tuyệt vời). Các phương án khác mang nghĩa: talkative (nói nhiều), sensitive (nhạy cảm), serious (nghiêm túc) không khớp chủ đề.
+                    </div>
+                </div>
+
+                <div class="question-card" data-correct="C">
+                    <div class="q-number">Question 10 (Ex 16 - Paragraph 3)</div>
+                    <div class="q-text">They help me when I’m sad and cheer me (2)_____.</div>
+                    <div class="options-grid">
+                        <button class="opt-btn" onclick="selectOption(this, 'A')">A. down</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'B')">B. to</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'C')">C. up</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'D')">D. for</button>
+                    </div>
+                    <div class="explanation-box">
+                        Cụm động từ (Phrasal Verb): "cheer someone up" có nghĩa là làm ai đó vui lên, phấn chấn lên khi họ đang buồn. Do vậy ta chọn giới từ <strong>C. up</strong>.
+                    </div>
+                </div>
+
+                <div class="question-card" data-correct="B">
+                    <div class="q-number">Question 11 (Ex 16 - Paragraph 3)</div>
+                    <div class="q-text">On Sundays, we (3)_____ bikes and eat ice cream.</div>
+                    <div class="options-grid">
+                        <button class="opt-btn" onclick="selectOption(this, 'A')">A. do</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'B')">B. ride</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'C')">C. raise</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'D')">D. drive</button>
+                    </div>
+                    <div class="explanation-box">
+                        Động từ đi với phương tiện xe đạp (bikes) luôn là động từ hành động <strong>ride</strong> (ride a bike/ ride bikes: đạp xe). Từ "drive" dùng cho xe ô tô/xe tải. Chọn <strong>B</strong>.
+                    </div>
+                </div>
+
+                <div class="question-card" data-correct="C">
+                    <div class="q-number">Question 12 (Ex 16 - Paragraph 3)</div>
+                    <div class="q-text">Let’s (4)______ friendship every day!</div>
+                    <div class="options-grid">
+                        <button class="opt-btn" onclick="selectOption(this, 'A')">A. celebrated</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'B')">B. to celebrate</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'C')">C. celebrate</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'D')">D. celebrating</button>
+                    </div>
+                    <div class="explanation-box">
+                        Cấu trúc rủ rê thân mật: "Let's + Động từ nguyên mẫu không to (V-bare)". Do đó phương án đúng bắt buộc phải là dạng nguyên thể <strong>C. celebrate</strong>.
+                    </div>
+                </div>
+            </div>
+
+            <!-- QUESTIONS FOR GROUP 17 -->
+            <div id="right-group17" class="exercise-wrapper">
+                <div class="question-card" data-correct="B">
+                    <div class="q-number">Question 1 (Ex 17 - Paragraph 1)</div>
+                    <div class="q-text">Susan is tall and has a long black (1)______.</div>
+                    <div class="options-grid">
+                        <button class="opt-btn" onclick="selectOption(this, 'A')">A. nose</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'B')">B. hair</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'C')">C. eye</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'D')">D. arm</button>
+                    </div>
+                    <div class="explanation-box">
+                        Để miêu tả về ngoại hình con người, kết hợp với các tính từ "long" (dài) và "black" (đen) thì danh từ hợp logic nhất chỉ có thể là mái tóc - <strong>B. hair</strong>.
+                    </div>
+                </div>
+
+                <div class="question-card" data-correct="D">
+                    <div class="q-number">Question 2 (Ex 17 - Paragraph 1)</div>
+                    <div class="q-text">Her apartment has a pool but she rarely (2)_______ to the swimming pool.</div>
+                    <div class="options-grid">
+                        <button class="opt-btn" onclick="selectOption(this, 'A')">A. have</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'B')">B. has</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'C')">C. go</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'D')">D. goes</button>
+                    </div>
+                    <div class="explanation-box">
+                        Chủ ngữ ở đây là "she" (ngôi thứ ba số ít), đi cùng trạng từ "rarely" ở thì hiện tại đơn thì động từ chính "go" phải chia bằng cách thêm đuôi -es thành <strong>goes</strong>. Đi kèm giới từ "to". Chọn <strong>D</strong>.
+                    </div>
+                </div>
+
+                <div class="question-card" data-correct="A">
+                    <div class="q-number">Question 3 (Ex 17 - Paragraph 1)</div>
+                    <div class="q-text">Her favorite subject (3)_______ IT.</div>
+                    <div class="options-grid">
+                        <button class="opt-btn" onclick="selectOption(this, 'A')">A. is</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'B')">B. am</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'C')">C. are</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'D')">D. was</button>
+                    </div>
+                    <div class="explanation-box">
+                        Chủ ngữ "Her favorite subject" (Môn học yêu thích của cô ấy) là danh từ số ít đếm được. Do đó, động từ tobe ở hiện tại đi kèm phải là <strong>is</strong>. Chọn <strong>A</strong>.
+                    </div>
+                </div>
+
+                <div class="question-card" data-correct="C">
+                    <div class="q-number">Question 4 (Ex 17 - Paragraph 1)</div>
+                    <div class="q-text">She is very (4)_______. She always helps people when they need.</div>
+                    <div class="options-grid">
+                        <button class="opt-btn" onclick="selectOption(this, 'A')">A. kind</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'B')">B. funny</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'C')">C. helpful</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'D')">D. selfish</button>
+                    </div>
+                    <div class="explanation-box">
+                        Câu phía sau giải thích "always helps people" (luôn giúp đỡ mọi người) nên tính từ mô tả chính xác nhất phẩm chất này là <strong>C. helpful</strong> (hay giúp đỡ người khác).
+                    </div>
+                </div>
+
+                <div class="question-card" data-correct="B">
+                    <div class="q-number">Question 5 (Ex 17 - Paragraph 1)</div>
+                    <div class="q-text">Susan and I have the festival (5)_______ school next week.</div>
+                    <div class="options-grid">
+                        <button class="opt-btn" onclick="selectOption(this, 'A')">A. in</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'B')">B. at</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'C')">C. on</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'D')">D. by</button>
+                    </div>
+                    <div class="explanation-box">
+                        Sử dụng cụm từ chỉ địa điểm tổ chức sự kiện tại trường học: "at school". Chọn <strong>B</strong>.
+                    </div>
+                </div>
+
+                <div class="question-card" data-correct="D">
+                    <div class="q-number">Question 6 (Ex 17 - Paragraph 1)</div>
+                    <div class="q-text">We (6)_______ and can't wait to go to the festival.</div>
+                    <div class="options-grid">
+                        <button class="opt-btn" onclick="selectOption(this, 'A')">A. is exciting</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'B')">B. are exciting</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'C')">C. is excited</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'D')">D. are excited</button>
+                    </div>
+                    <div class="explanation-box">
+                        1. Chủ ngữ là "We" (Số nhiều) nên động từ ToBe phải chia là "are". Loại bỏ A và C.<br>
+                        2. Tính từ đuôi "-ed" (excited) dùng để diễn tả cảm xúc bộc lộ bên trong của con người trước một sự kiện, còn tính từ đuôi "-ing" (exciting) dùng mô tả tính chất của vật/sự việc. Do vậy phải dùng <strong>are excited</strong>. Chọn <strong>D</strong>.
+                    </div>
+                </div>
+
+                <!-- TONY SECTION EX 17.2 -->
+                <div class="question-card" data-correct="B">
+                    <div class="q-number">Question 7 (Ex 17 - Paragraph 2)</div>
+                    <div class="q-text">He is a physics teacher. He's (1)_____ art school in Scotland.</div>
+                    <div class="options-grid">
+                        <button class="opt-btn" onclick="selectOption(this, 'A')">A. teach</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'B')">B. teaches</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'C')">C. teaching</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'D')">D. teacher</button>
+                    </div>
+                    <div class="explanation-box">
+                        Chủ ngữ số ít chỉ thói quen nghề nghiệp lặp lại hàng ngày (Thì hiện tại đơn). Động từ chính thêm -es với chủ ngữ He là <strong>teaches</strong>. (Lưu ý: Dấu phẩy ở đề bài gốc 'He's' có thể coi là một lỗi đánh máy nhỏ của đề bài hoặc viết tắt thay cho 'He teaches'). Đáp án phù hợp ngữ pháp nhất là <strong>B</strong>.
+                    </div>
+                </div>
+
+                <div class="question-card" data-correct="B">
+                    <div class="q-number">Question 8 (Ex 17 - Paragraph 2)</div>
+                    <div class="q-text">Every morning he gets up at 6 o'clock, (2)______ breakfast</div>
+                    <div class="options-grid">
+                        <button class="opt-btn" onclick="selectOption(this, 'A')">A. have</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'B')">B. has</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'C') text-decoration:line-through'">C. do</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'D')">D. play</button>
+                    </div>
+                    <div class="explanation-box">
+                        Cụm từ cố định chỉ việc ăn sáng: "have breakfast". Do chủ ngữ song song trước đó nối bằng dấu phẩy là "he" (số ít) nên biến đổi động từ thành <strong>has</strong>. Chọn <strong>B</strong>.
+                    </div>
+                </div>
+
+                <div class="question-card" data-correct="A">
+                    <div class="q-number">Question 9 (Ex 17 - Paragraph 2)</div>
+                    <div class="q-text">The school is far from his home, so he can't (3)_______ there.</div>
+                    <div class="options-grid">
+                        <button class="opt-btn" onclick="selectOption(this, 'A')">A. walk</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'B')">B. go on foot</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'C')">C. ride a bike</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'D')">D. fly</button>
+                    </div>
+                    <div class="explanation-box">
+                        Theo mệnh đề sau: "He must go by bus" (Anh ấy phải đi xe buýt) vì trường rất xa, chứng tỏ anh ấy không thể đi bộ - động từ nguyên mẫu đứng sau động từ khiếm khuyết can't phù hợp nhất là <strong>walk</strong>. Chọn <strong>A</strong>. (Cụm B 'go on foot' cũng có nghĩa đi bộ nhưng đi kèm trạng từ 'there' phía sau thì động từ đơn 'walk there' tự nhiên và chính xác nhất).
+                    </div>
+                </div>
+
+                <div class="question-card" data-correct="B">
+                    <div class="q-number">Question 10 (Ex 17 - Paragraph 2)</div>
+                    <div class="q-text">He has lunch at a (4)______ nearby.</div>
+                    <div class="options-grid">
+                        <button class="opt-btn" onclick="selectOption(this, 'A')">A. park</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'B')">B. restaurant</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'C')">C. museum</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'D')">D. bank</button>
+                    </div>
+                    <div class="explanation-box">
+                        Địa điểm thích hợp để ăn trưa (has lunch) trong các phương án trên chỉ có thể là <strong>B. restaurant</strong> (nhà hàng).
+                    </div>
+                </div>
+
+                <div class="question-card" data-correct="D">
+                    <div class="q-number">Question 11 (Ex 17 - Paragraph 2)</div>
+                    <div class="q-text">He doesn't work (5)______ Sundays.</div>
+                    <div class="options-grid">
+                        <button class="opt-btn" onclick="selectOption(this, 'A')">A. at</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'B')">B. for</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'C')">C. in</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'D')">D. on</button>
+                    </div>
+                    <div class="explanation-box">
+                        Quy tắc giới từ thời gian: Đi trước các ngày trong tuần (Sundays, Mondays...) ta luôn sử dụng giới từ <strong>on</strong>. Chọn <strong>D</strong>.
+                    </div>
+                </div>
+
+                <div class="question-card" data-correct="B">
+                    <div class="q-number">Question 12 (Ex 17 - Paragraph 2)</div>
+                    <div class="q-text">He is married and he (6)_______ a son.</div>
+                    <div class="options-grid">
+                        <button class="opt-btn" onclick="selectOption(this, 'A')">A. have</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'B')">B. has</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'C')">C. is</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'D')">D. wear</button>
+                    </div>
+                    <div class="explanation-box">
+                        Để biểu thị mối quan hệ sở hữu gia đình "anh ấy có một người con trai", đi kèm chủ ngữ ngôi thứ 3 số ít "he", động từ "have" biến đổi thành <strong>has</strong>. Chọn <strong>B</strong>.
+                    </div>
+                </div>
+            </div>
+
+            <!-- QUESTIONS FOR GROUP 18 -->
+            <div id="right-group18" class="exercise-wrapper">
+                <!-- 18.1.1 -->
+                <div class="question-card" data-correct="C">
+                    <div class="q-number">Question 1 (Ex 18 - Paragraph 1)</div>
+                    <div class="q-text">Where is Tina writing from?</div>
+                    <div class="options-grid">
+                        <button class="opt-btn" onclick="selectOption(this, 'A')">A. Her home</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'B')">B. A school trip</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'C')">C. A summer camp in Brisbane</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'D')">D. A museum in the city center</button>
+                    </div>
+                    <div class="explanation-box">
+                        <strong>Dẫn chứng từ bài đọc:</strong> Ngay dòng đầu tiên của bức thư, Tina viết: "I’m writing to you from the summer camp in Brisbane". Do đó chọn <strong>C</strong>.
+                    </div>
+                </div>
+
+                <div class="question-card" data-correct="B">
+                    <div class="q-number">Question 2 (Ex 18 - Paragraph 1)</div>
+                    <div class="q-text">The word "fine" in line 3 is closest in meaning to __________.</div>
+                    <div class="options-grid">
+                        <button class="opt-btn" onclick="selectOption(this, 'A')">A. bad</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'B')">B. excellent</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'C')">C. cloudy</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'D')">D. rainy</button>
+                    </div>
+                    <div class="explanation-box">
+                        Trong ngữ cảnh thời tiết "the weather is fine", từ "fine" có nghĩa là thời tiết đẹp, tốt trời, đồng nghĩa với từ tích cực <strong>B. excellent</strong> (xuất sắc, tuyệt vời).
+                    </div>
+                </div>
+
+                <div class="question-card" data-correct="D">
+                    <div class="q-number">Question 3 (Ex 18 - Paragraph 1)</div>
+                    <div class="q-text">According to the passage, which of the following sentences is TRUE?</div>
+                    <div class="options-grid">
+                        <button class="opt-btn" onclick="selectOption(this, 'A')">A. Tina is at the camp alone.</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'B')">B. The weather at the camp is bad.</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'C')">C. Tina is sharing a room with one friend.</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'D')">D. Hana is kind and friendly.</button>
+                    </div>
+                    <div class="explanation-box">
+                        <strong>Dẫn chứng:</strong> Trong đoạn 2 có câu trực tiếp: "Hana... She is very kind and friendly." Vì vậy câu D hoàn toàn chính xác. (Loại C vì bài bảo ở cùng 2 bạn Hana và Mi).
+                    </div>
+                </div>
+
+                <div class="question-card" data-correct="B">
+                    <div class="q-number">Question 4 (Ex 18 - Paragraph 1)</div>
+                    <div class="q-text">Which activity is NOT mentioned as something they can do at the camp?</div>
+                    <div class="options-grid">
+                        <button class="opt-btn" onclick="selectOption(this, 'A')">A. Going fishing</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'B')">B. Playing football</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'C')">C. Visiting a museum</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'D')">D. Having parties</button>
+                    </div>
+                    <div class="explanation-box">
+                        <strong>Dẫn chứng:</strong> Các hoạt động được liệt kê gồm: "going fishing, sailing, playing volleyball..., visiting a museum... or having parties". Hoạt động không hề xuất hiện là <strong>B. Playing football</strong>.
+                    </div>
+                </div>
+
+                <div class="question-card" data-correct="D">
+                    <div class="q-number">Question 5 (Ex 18 - Paragraph 1)</div>
+                    <div class="q-text">What does Tina ask her Grandma to do at the end of the letter?</div>
+                    <div class="options-grid">
+                        <button class="opt-btn" onclick="selectOption(this, 'A')">A. Write back to her soon.</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'B')">B. Send her more money.</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'C')">C. Come visit the camp.</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'D')">D. Tell Grandpa she said hello.</button>
+                    </div>
+                    <div class="explanation-box">
+                        <strong>Dẫn chứng:</strong> Tina viết câu hỏi: "Can you send my regards to Grandpa?" (Bà gửi lời hỏi thăm/lời chào kính trọng của con tới ông nhé). Điều này tương đương phương án <strong>D. Tell Grandpa she said hello</strong>.
+                    </div>
+                </div>
+
+                <!-- 18.2 -->
+                <div class="question-card" data-correct="A">
+                    <div class="q-number">Question 6 (Ex 18 - Paragraph 2)</div>
+                    <div class="q-text">What is the main topic of the passage?</div>
+                    <div class="options-grid">
+                        <button class="opt-btn" onclick="selectOption(this, 'A')">A. Julie's best friend</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'B')">B. Janet's favorite activities</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'C')">C. Julie's hobbies</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'D')">D. School life</button>
+                    </div>
+                    <div class="explanation-box">
+                        Câu mở đầu văn bản: "I’m Julie and my best friend is Janet." Toàn bộ phần sau tập trung kể về tính cách, các hoạt động chung và sự giúp đỡ của Janet đối với Julie. Do đó chủ đề cốt lõi là <strong>A. Julie's best friend</strong>.
+                    </div>
+                </div>
+
+                <div class="question-card" data-correct="B">
+                    <div class="q-number">Question 7 (Ex 18 - Paragraph 2)</div>
+                    <div class="q-text">Which of the following is NOT true according to the passage?</div>
+                    <div class="options-grid">
+                        <button class="opt-btn" onclick="selectOption(this, 'A')">A. Julie and Janet are the same age.</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'B')">B. Julie and Janet are in different classes.</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'C')">C. Janet is kind and friendly.</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'D')">D. They live in the same building.</button>
+                    </div>
+                    <div class="explanation-box">
+                        <strong>Dẫn chứng đối chiếu:</strong> Trong bài viết ghi "we’re in the same class" (chúng tôi học cùng một lớp). Vì vậy, câu B phát biểu "in different classes" (ở các lớp khác nhau) là SAI. Đề bài yêu cầu tìm câu KHÔNG ĐÚNG nên chọn <strong>B</strong>.
+                    </div>
+                </div>
+
+                <div class="question-card" data-correct="C">
+                    <div class="q-number">Question 8 (Ex 18 - Paragraph 2)</div>
+                    <div class="q-text">What do Julie and Janet usually do at break time?</div>
+                    <div class="options-grid">
+                        <button class="opt-btn" onclick="selectOption(this, 'A')">A. They play games and read comic books.</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'B')">B. They go skating or to the cinema.</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'C')">C. They sometimes play skipping or just sit and chat.</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'D')">D. They talk about their homework.</button>
+                    </div>
+                    <div class="explanation-box">
+                        <strong>Dẫn chứng:</strong> "At break time, we sometimes play skipping or we just sit and chat." Đối chiếu trực tiếp chọn chính xác câu <strong>C</strong>.
+                    </div>
+                </div>
+
+                <div class="question-card" data-correct="B">
+                    <div class="q-number">Question 9 (Ex 18 - Paragraph 2)</div>
+                    <div class="q-text">The word "her" in line 6 refers to _______.</div>
+                    <div class="options-grid">
+                        <button class="opt-btn" onclick="selectOption(this, 'A')">A. Julie</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'B')">B. Janet</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'C')">C. homework</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'D')">D. question</button>
+                    </div>
+                    <div class="explanation-box">
+                        Dựa vào câu chứa từ: "When I’m doing my homework and I don’t understand a question, I often call her for help." Người kể chuyện là Julie đang gọi điện cho bạn thân của mình, tức là gọi cho <strong>B. Janet</strong>.
+                    </div>
+                </div>
+
+                <div class="question-card" data-correct="C">
+                    <div class="q-number">Question 10 (Ex 18 - Paragraph 2)</div>
+                    <div class="q-text">What does Janet usually want to do at weekends?</div>
+                    <div class="options-grid">
+                        <button class="opt-btn" onclick="selectOption(this, 'A')">A. Stay at home and read comic books.</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'B')">B. Call Julie for help with homework.</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'C')">C. Go skating in the park or go to the cinema.</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'D')">D. Talk about school.</button>
+                    </div>
+                    <div class="explanation-box">
+                        <strong>Dẫn chứng:</strong> "At weekends, Janet usually wants to go skating in the park or go to the cinema..." Khớp hoàn toàn với phương án <strong>C</strong>.
+                    </div>
+                </div>
+
+                <!-- 18.3 -->
+                <div class="question-card" data-correct="C">
+                    <div class="q-number">Question 11 (Ex 18 - Paragraph 3)</div>
+                    <div class="q-text">How do they go to school?</div>
+                    <div class="options-grid">
+                        <button class="opt-btn" onclick="selectOption(this, 'A')">A. by bus</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'B')">B. on foot</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'C')">C. by motorbike</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'D')">D. by bike</button>
+                    </div>
+                    <div class="explanation-box">
+                        <strong>Dẫn chứng:</strong> "Everyday, my father takes us to school on his motorbike..." Chở đến trường bằng xe máy nên phương tiện là <strong>C. by motorbike</strong>.
+                    </div>
+                </div>
+
+                <div class="question-card" data-correct="C">
+                    <div class="q-number">Question 12 (Ex 18 - Paragraph 3)</div>
+                    <div class="q-text">What is Lan’s favourite subject?</div>
+                    <div class="options-grid">
+                        <button class="opt-btn" onclick="selectOption(this, 'A')">A. English</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'B')">B. geography</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'C')">C. Math</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'D')">D. Literature</button>
+                    </div>
+                    <div class="explanation-box">
+                        <strong>Dẫn chứng:</strong> "Her favourite subject is Math, and she is really good at it." Chọn <strong>C. Math</strong>.
+                    </div>
+                </div>
+
+                <div class="question-card" data-correct="A">
+                    <div class="q-number">Question 13 (Ex 18 - Paragraph 3)</div>
+                    <div class="q-text">What do they usually help each other?</div>
+                    <div class="options-grid">
+                        <button class="opt-btn" onclick="selectOption(this, 'A')">A. do their homework</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'B')">B. do their housework</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'C')">C. do their shopping</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'D')">D. help their housework</button>
+                    </div>
+                    <div class="explanation-box">
+                        <strong>Dẫn chứng:</strong> "We usually help each other with our homework." Vì vậy hoạt động tương trợ lẫn nhau là làm bài tập về nhà <strong>A</strong>.
+                    </div>
+                </div>
+
+                <div class="question-card" data-correct="B">
+                    <div class="q-number">Question 14 (Ex 18 - Paragraph 3)</div>
+                    <div class="q-text">What does Lan do to make Nga happy?</div>
+                    <div class="options-grid">
+                        <button class="opt-btn" onclick="selectOption(this, 'A')">A. sing a song</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'B')">B. tell stories</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'C')">C. buy presents</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'D')">D. go shopping</button>
+                    </div>
+                    <div class="explanation-box">
+                        <strong>Dẫn chứng:</strong> "Whenever I am sad, Lan always tells me stories to make me happy." Kể chuyện để làm bạn vui lên, đáp án là <strong>B. tell stories</strong>.
+                    </div>
+                </div>
+
+                <div class="question-card" data-correct="C">
+                    <div class="q-number">Question 15 (Ex 18 - Paragraph 3)</div>
+                    <div class="q-text">What is NOT TRUE about the passage?</div>
+                    <div class="options-grid">
+                        <button class="opt-btn" onclick="selectOption(this, 'A')">A. They are classmate</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'B')">B. They are neighbours</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'C')">C. Nga feels unlucky to have a friend like Lan</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'D')">D. Lan is an intelligent girl</button>
+                    </div>
+                    <div class="explanation-box">
+                        <strong>Dẫn chứng đối chiếu:</strong> Ở câu cuối bài, Nga khẳng định: "I feel really lucky to have a best friend like Lan." (Tôi cảm thấy thực sự may mắn). Do đó câu C phát biểu "Nga cảm thấy kém may mắn (unlucky)" là SAI hoàn toàn. Chọn <strong>C</strong>.
+                    </div>
+                </div>
+            </div>
+
+            <!-- QUESTIONS FOR GROUP 19 -->
+            <div id="right-group19" class="exercise-wrapper">
+                <div class="question-card" data-type="text" data-correct="Because he often plays sports every day.">
+                    <div class="q-number">Question 1 (Ex 19)</div>
+                    <div class="q-text">Why is Mark tall and sporty?</div>
+                    <input type="text" class="text-input-box" placeholder="Nhập câu trả lời bằng tiếng Anh của bạn tại đây..." onchange="validateTextInput(this)">
+                    <div class="explanation-box">
+                        <strong>Giải thích:</strong> Trích dẫn nguyên văn từ bài đọc: "He is tall and sporty because he plays sports every day." Học sinh có thể viết lại tương tự.
+                    </div>
+                </div>
+
+                <div class="question-card" data-type="text" data-correct="There is always a bright smile on his face.">
+                    <div class="q-number">Question 2 (Ex 19)</div>
+                    <div class="q-text">What is there always on his face?</div>
+                    <input type="text" class="text-input-box" placeholder="Nhập câu trả lời bằng tiếng Anh của bạn tại đây..." onchange="validateTextInput(this)">
+                    <div class="explanation-box">
+                        <strong>Giải thích:</strong> Đoạn văn ghi rõ: "There is always a bright smile on his face."
+                    </div>
+                </div>
+
+                <div class="question-card" data-type="text" data-correct="It's Maths.">
+                    <div class="q-number">Question 3 (Ex 19)</div>
+                    <div class="q-text">What is his favourite subject?</div>
+                    <input type="text" class="text-input-box" placeholder="Nhập câu trả lời bằng tiếng Anh của bạn tại đây..." onchange="validateTextInput(this)">
+                    <div class="explanation-box">
+                        <strong>Giải thích:</strong> Dẫn chứng: "Maths is his favourite subject." Trả lời ngắn gọn: "It's Maths." hoặc đầy đủ đều được chấp nhận.
+                    </div>
+                </div>
+
+                <div class="question-card" data-type="text" data-correct="He plays it well.">
+                    <div class="q-number">Question 4 (Ex 19)</div>
+                    <div class="q-text">How does he play volleyball?</div>
+                    <input type="text" class="text-input-box" placeholder="Nhập câu trả lời bằng tiếng Anh của bạn tại đây..." onchange="validateTextInput(this)">
+                    <div class="explanation-box">
+                        <strong>Giải thích:</strong> Trong bài có câu: "He also plays volleyball very well."
+                    </div>
+                </div>
+
+                <div class="question-card" data-type="text" data-correct="He spends time helping his parents with the housework.">
+                    <div class="q-number">Question 5 (Ex 19)</div>
+                    <div class="q-text">What does he spend time doing at home?</div>
+                    <input type="text" class="text-input-box" placeholder="Nhập câu trả lời bằng tiếng Anh của bạn tại đây..." onchange="validateTextInput(this)">
+                    <div class="explanation-box">
+                        <strong>Giải thích:</strong> Câu cuối bài: "...spends time helping them with the housework." (them ở đây chính là parents).
+                    </div>
+                </div>
+            </div>
+
+            <!-- QUESTIONS FOR GROUP 20 -->
+            <div id="right-group20" class="exercise-wrapper">
+                <h3 style="font-size:15px; color:#4A5568; margin-bottom:15px;">Mời bạn chọn câu bị khuyết cho Đoạn 1 (Minh):</h3>
+                
+                <div class="question-card" data-correct="B">
+                    <div class="q-number">Blank (1) - Paragraph 1</div>
+                    <div class="q-text">Chọn câu điền vào chỗ trống số (1):</div>
+                    <div class="options-grid">
+                        <button class="opt-btn" onclick="selectOption(this, 'A')">A. we often play football and computer games</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'B')">B. I am 12 and a pupil at Dong Da Secondary School</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'C')">C. He is very active and funny</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'D')">D. and they are friendly</button>
+                    </div>
+                </div>
+
+                <div class="question-card" data-correct="D">
+                    <div class="q-number">Blank (2) - Paragraph 1</div>
+                    <div class="q-text">Chọn câu điền vào chỗ trống số (2):</div>
+                    <div class="options-grid">
+                        <button class="opt-btn" onclick="selectOption(this, 'A')">A. we often play football and computer games</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'B')">B. I am 12 and a pupil at Dong Da Secondary School</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'C')">C. He is very active and funny</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'D')">D. and they are friendly</button>
+                    </div>
+                </div>
+
+                <div class="question-card" data-correct="C">
+                    <div class="q-number">Blank (3) - Paragraph 1</div>
+                    <div class="q-text">Chọn câu điền vào chỗ trống số (3):</div>
+                    <div class="options-grid">
+                        <button class="opt-btn" onclick="selectOption(this, 'A')">A. we often play football and computer games</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'B')">B. I am 12 and a pupil at Dong Da Secondary School</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'C')">C. He is very active and funny</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'D')">D. and they are friendly</button>
+                    </div>
+                </div>
+
+                <div class="question-card" data-correct="A">
+                    <div class="q-number">Blank (4) - Paragraph 1</div>
+                    <div class="q-text">Chọn câu điền vào chỗ trống số (4):</div>
+                    <div class="options-grid">
+                        <button class="opt-btn" onclick="selectOption(this, 'A')">A. we often play football and computer games</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'B')">B. I am 12 and a pupil at Dong Da Secondary School</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'C')">C. He is very active and funny</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'D')">D. and they are friendly</button>
+                    </div>
+                </div>
+
+                <h3 style="font-size:15px; color:#4A5568; margin-top:25px; margin-bottom:15px;">Mời bạn chọn câu bị khuyết cho Đoạn 2 (Nhi):</h3>
+
+                <div class="question-card" data-correct="D">
+                    <div class="q-number">Blank (1) - Paragraph 2</div>
+                    <div class="q-text">Chọn câu điền vào chỗ trống số (1):</div>
+                    <div class="options-grid">
+                        <button class="opt-btn" onclick="selectOption(this, 'A')">A. Nhi is at an English camp in Da Nang</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'B')">B. and we often walk to school in the morning</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'C')">C. and writing stories in our free time</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'D')">D. She also understands me well</button>
+                    </div>
+                </div>
+
+                <div class="question-card" data-correct="B">
+                    <div class="q-number">Blank (2) - Paragraph 2</div>
+                    <div class="q-text">Chọn câu điền vào chỗ trống số (2):</div>
+                    <div class="options-grid">
+                        <button class="opt-btn" onclick="selectOption(this, 'A')">A. Nhi is at an English camp in Da Nang</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'B')">B. and we often walk to school in the morning</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'C')">C. and writing stories in our free time</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'D')">D. She also understands me well</button>
+                    </div>
+                </div>
+
+                <div class="question-card" data-correct="C">
+                    <div class="q-number">Blank (3) - Paragraph 2</div>
+                    <div class="q-text">Chọn câu điền vào chỗ trống số (3):</div>
+                    <div class="options-grid">
+                        <button class="opt-btn" onclick="selectOption(this, 'A')">A. Nhi is at an English camp in Da Nang</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'B')">B. and we often walk to school in the morning</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'C')">C. and writing stories in our free time</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'D')">D. She also understands me well</button>
+                    </div>
+                </div>
+
+                <div class="question-card" data-correct="A">
+                    <div class="q-number">Blank (4) - Paragraph 2</div>
+                    <div class="q-text">Chọn câu điền vào chỗ trống số (4):</div>
+                    <div class="options-grid">
+                        <button class="opt-btn" onclick="selectOption(this, 'A')">A. Nhi is at an English camp in Da Nang</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'B')">B. and we often walk to school in the morning</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'C')">C. and writing stories in our free time</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'D')">D. She also understands me well</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Bottom Persistent Action Bar -->
+    <footer>
+        <div style="font-weight: 700; color: var(--dark);" id="progressStats">Tiến độ phần này: 0 câu đã làm</div>
+        <button class="submit-btn" onclick="calculateFinalScore()">NỘP BÀI KIỂM TRA 🎉</button>
+    </footer>
+
+    <!-- Result Display Modal Layer -->
+    <div class="result-modal" id="scoreModal">
+        <div class="modal-content">
+            <h2>Kết Quả Làm Bài Của Bạn 🏆</h2>
+            <div class="score-big" id="modalScoreText">0/0</div>
+            <div class="rank-comment" id="modalComment">Cố gắng thêm nhé!</div>
+            <button class="close-modal-btn" onclick="closeModal()">Làm lại bài thi 🔄</button>
+        </div>
+    </div>
+
+    <script>
+        // --- Web Audio API Engine sinh âm thanh Gamification chuyên nghiệp ---
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function triggerSound(status) {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            if (status === 'correct') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+                osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1); // E5
+                osc.frequency.setValueAtTime(783.99, audioCtx.currentTime + 0.2); // G5
+                gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.4);
+            } else {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(220, audioCtx.currentTime); // A3
+                osc.frequency.linearRampToValueAtTime(110, audioCtx.currentTime + 0.3);
+                gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+            }
+        }
+
+        // --- Canvas Confetti Pháo giấy hiệu ứng ăn mừng ---
+        const canvas = document.getElementById('confetti-canvas');
+        const ctx = canvas.getContext('2d');
+        let confetti = [];
+        
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        function spawnConfetti() {
+            confetti = [];
+            for (let i = 0; i < 100; i++) {
+                confetti.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height - canvas.height,
+                    r: Math.random() * 6 + 4,
+                    d: Math.random() * canvas.height,
+                    color: `hsl(${Math.random() * 360}, 100%, 50%)`,
+                    tilt: Math.random() * 10 - 5
+                });
+            }
+            animateConfetti();
+        }
+
+        function animateConfetti() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            let active = false;
+            confetti.forEach((p) => {
+                p.y += Math.random() * 3 + 2;
+                p.tilt += 0.1;
+                ctx.beginPath();
+                ctx.lineWidth = p.r;
+                ctx.strokeStyle = p.color;
+                ctx.moveTo(p.x + p.tilt + p.r / 2, p.y);
+                ctx.lineTo(p.x + p.tilt, p.y + p.tilt + p.r / 2);
+                ctx.stroke();
+                if (p.y < canvas.height) active = true;
+            });
+            if (active) requestAnimationFrame(animateConfetti);
+            else ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        // --- Hệ thống đếm ngược thời gian (Timer) ---
+        let timerSeconds = 600; // 10 Phút
+        let timerInterval = null;
+        let isTimerRunning = false;
+
+        function toggleTimer() {
+            const btn = document.getElementById('timerButton');
+            if (!isTimerRunning) {
+                isTimerRunning = true;
+                btn.style.background = '#00C9A7';
+                btn.style.color = '#FFF';
+                timerInterval = setInterval(() => {
+                    timerSeconds--;
+                    if (timerSeconds <= 0) {
+                        clearInterval(timerInterval);
+                        btn.textContent = "⏱️ HẾT GIỜ LÀM BÀI!";
+                        alert("Đã hết giờ làm bài. Bạn vẫn có thể tiếp tục làm, nhưng nhớ là trong phòng thi thật, bạn chỉ nên làm một bài như thế này trong 10 phút thôi nha.");
+                    } else {
+                        let m = String(Math.floor(timerSeconds / 60)).padStart(2, '0');
+                        let s = String(timerSeconds % 60).padStart(2, '0');
+                        btn.textContent = `⏸️ TẠM DỪNG TIẾP TỤC (${m}:${s})`;
+                    }
+                }, 1000);
+            } else {
+                isTimerRunning = false;
+                clearInterval(timerInterval);
+                btn.style.background = 'var(--accent)';
+                btn.style.color = 'var(--dark)';
+                btn.textContent = "▶️ TIẾP TỤC TÍNH GIỜ";
+            }
+        }
+
+        // --- Thay đổi nhóm bài tập linh hoạt (Navigation) ---
+        function changeExerciseGroup(groupKey) {
+            document.querySelectorAll('.exercise-wrapper').forEach(wrapper => {
+                wrapper.classList.remove('active-view');
+            });
+            document.getElementById(`left-${groupKey}`).classList.add('active-view');
+            document.getElementById(`right-${groupKey}`).classList.add('active-view');
+            updateProgressCounters();
+        }
+
+        // --- Đóng mở hộp dịch tiếng Việt đoạn văn ---
+        function toggleTranslation(btn) {
+            const box = btn.nextElementSibling;
+            if (box.style.display === 'block') {
+                box.style.display = 'none';
+                btn.textContent = "Mở dịch đoạn này 🌟";
+            } else {
+                box.style.display = 'block';
+                btn.textContent = "Đóng bản dịch ❌";
+            }
+        }
+
+        // --- Dạng bài bấm dấu chấm lửng hiện đáp án ---
+        function showBlankAns(span, text) {
+            span.textContent = ` [ ${text} ] `;
+            span.style.color = 'var(--correct)';
+            triggerSound('correct');
+        }
+
+        // --- Xử lý sự kiện nhấn chọn đáp án trắc nghiệm ---
+        function selectOption(btn, chosenKey) {
+            const card = btn.closest('.question-card');
+            if (card.classList.contains('is-answered')) return; // Khóa thẻ bài nếu đã trả lời xong
+
+            const correctKey = card.getAttribute('data-correct');
+            const allButtons = card.querySelectorAll('.opt-btn');
+            const explanation = card.querySelector('.explanation-box');
+
+            allButtons.forEach(b => b.classList.add('disabled'));
+
+            if (chosenKey === correctKey) {
+                btn.classList.add('correct');
+                triggerSound('correct');
+                spawnConfetti();
+            } else {
+                btn.classList.add('wrong');
+                card.classList.add('shake-card');
+                triggerSound('wrong');
+                // Tự động hiển thị đáp án đúng ngay lập tức như yêu cầu
+                allButtons.forEach(b => {
+                    if (b.textContent.startsWith(correctKey)) {
+                        b.classList.add('correct');
+                    }
+                });
+            }
+
+            if(explanation) explanation.style.display = 'block';
+            card.classList.add('is-answered');
+            updateProgressCounters();
+        }
+
+        // --- Xử lý kiểm tra văn bản tự luận (Tự điền) ---
+        function validateTextInput(input) {
+            const card = input.closest('.question-card');
+            const sampleCorrect = card.getAttribute('data-correct').trim().toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"");
+            const userAns = input.value.trim().toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"");
+            const explanation = card.querySelector('.explanation-box');
+
+            if (userAns === "") return;
+
+            // Kiểm tra tương đối từ khóa chính xác
+            if (sampleCorrect.includes(userAns) && userAns.length > 3) {
+                input.style.border = "3px solid var(--correct)";
+                input.style.background = "#E6FFFA";
+                triggerSound('correct');
+            } else {
+                input.style.border = "3px solid var(--wrong)";
+                input.style.background = "#FFF5F5";
+                card.classList.add('shake-card');
+                triggerSound('wrong');
+            }
+            if(explanation) {
+                explanation.innerHTML = `<strong>Đáp án gợi ý chuẩn:</strong> ${card.getAttribute('data-correct')}<br>` + explanation.innerHTML;
+                explanation.style.display = 'block';
+            }
+            card.classList.add('is-answered');
+            updateProgressCounters();
+        }
+
+        // --- Cập nhật thanh hiển thị tiến độ làm bài ---
+        function updateProgressCounters() {
+            const activeRightWrapper = document.querySelector('.right-panel .exercise-wrapper.active-view');
+            const total = activeRightWrapper.querySelectorAll('.question-card').length;
+            const answered = activeRightWrapper.querySelectorAll('.question-card.is-answered').length;
+            document.getElementById('progressStats').textContent = `Tiến độ phần này: Đã hoàn thành ${answered}/${total} câu hỏi`;
+        }
+
+        // --- Tính tổng điểm cuối bài và hiện bảng đánh giá hoành tráng ---
+        function calculateFinalScore() {
+            const allCards = document.querySelectorAll('.right-panel .question-card');
+            let totalQuestions = allCards.length;
+            let totalCorrect = 0;
+            let completed = 0;
+
+            allCards.forEach(card => {
+                if(card.classList.contains('is-answered')) {
+                    completed++;
+                    // Đo lường xem câu đó đúng hay sai
+                    const mcqCorrectBtn = card.querySelector('.opt-btn.correct');
+                    const textInput = card.querySelector('.text-input-box.correct');
+                    if(mcqCorrectBtn || (card.querySelector('.text-input-box') && card.querySelector('.text-input-box').style.borderColor === 'rgb(0, 210, 106)')) {
+                        totalCorrect++;
+                    }
+                }
+            });
+
+            if (completed < totalQuestions) {
+                if(!confirm(`Bạn mới làm được ${completed}/${totalQuestions} câu hỏi. Bạn vẫn muốn nộp bài chứ?`)) {
+                    return;
+                }
+            }
+
+            // Hiện kết quả trong Modal
+            document.getElementById('modalScoreText').textContent = `${totalCorrect}/${totalQuestions}`;
+            
+            let comment = "Cố lên nhé! Hãy rèn luyện thêm cùng cô Lê Hằng nha! 💪";
+            const rate = totalCorrect / totalQuestions;
+            if(rate >= 0.9) {
+                comment = "🏆 Thiên tài Anh Ngữ xuất sắc! Làm cực kỳ tốt luôn con ơi!";
+            } else if (rate >= 0.7) {
+                comment = "🌟 Làm tốt lắm! Bạn có kiến thức rất vững chắc!";
+            } else if (rate >= 0.5) {
+                comment = "👍 Khá tốt! Cố gắng phát huy ở những bài sau nhé!";
+            }
+            
+            document.getElementById('modalComment').textContent = comment;
+            document.getElementById('scoreModal').style.display = 'flex';
+            if(rate >= 0.7) spawnConfetti();
+        }
+
+        function closeModal() {
+            document.getElementById('scoreModal').style.display = 'none';
+            // Reset toàn bộ trạng thái để học sinh làm lại từ đầu nếu muốn
+            location.reload();
+        }
+
+        // --- Giải thuật Tự động xáo trộn câu hỏi ngẫu nhiên khi tải trang (Shuffle Array) ---
+        function shuffleOptions() {
+            document.querySelectorAll('.question-card').forEach(card => {
+                const grid = card.querySelector('.options-grid');
+                if(!grid) return;
+                const buttons = Array.from(grid.children);
+                // Hoán đổi ngẫu nhiên các vị trí nút
+                for (let i = buttons.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    grid.appendChild(buttons[j]);
+                }
+            });
+        }
+
+        // Khởi chạy khi load trang hoàn thành
+        window.onload = () => {
+            shuffleOptions();
+            updateProgressCounters();
+        };
+    </script>
+</body>
+</html>
